@@ -29,6 +29,8 @@ import { getUserThunk } from '../../services/userSlice';
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const backgroundLocation = location.state?.background;
 
   useEffect(() => {
     const toket = getCookie('accessToken');
@@ -45,18 +47,10 @@ const App = () => {
   return (
     <div className={styles.app}>
       <AppHeader />
-      <Routes>
+      <Routes location={backgroundLocation || location}>
         <Route path='*' element={<NotFound404 />} />
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
-        <Route
-          path='/feed/:number'
-          element={
-            <Modal title={'Заказ'} onClose={onClose}>
-              <OrderInfo />
-            </Modal>
-          }
-        />
         <Route
           path='/login'
           element={
@@ -105,25 +99,38 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route
-          path='/profile/orders/:number'
-          element={
-            <ProtectedRoute>
-              <Modal title={`Заказ`} onClose={onClose}>
+      </Routes>
+
+      {backgroundLocation && (
+        <Routes>
+          <Route
+            path='/profile/orders/:number'
+            element={
+              <ProtectedRoute>
+                <Modal title={`Заказ`} onClose={onClose}>
+                  <OrderInfo />
+                </Modal>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/ingredients/:id'
+            element={
+              <Modal title={'Детали ингредиента'} onClose={onClose}>
+                <IngredientDetails />
+              </Modal>
+            }
+          />
+          <Route
+            path='/feed/:number'
+            element={
+              <Modal title={'Заказ'} onClose={onClose}>
                 <OrderInfo />
               </Modal>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/ingredients/:id'
-          element={
-            <Modal title={'Детали ингредиента'} onClose={onClose}>
-              <IngredientDetails />
-            </Modal>
-          }
-        />
-      </Routes>
+            }
+          />
+        </Routes>
+      )}
     </div>
   );
 };

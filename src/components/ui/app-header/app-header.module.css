@@ -18,6 +18,12 @@
   display: flex;
   text-decoration: none;
   color: var(--text-inactive-color);
+  transition: color 0.5s;
+}
+
+.link:hover {
+  color: var(--text-primary-color);
+  transition: color 0.5s;
 }
 
 .link_active {
